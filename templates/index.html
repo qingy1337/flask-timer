@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Spacebar Timer</h1>
+
+        <div class="timer-container">
+            <div class="timer" id="timer">00:00:000</div>
+            <div class="status" id="status">Press SPACE to start</div>
+        </div>
+
+        <div class="times-container">
+            <h2>Saved Times</h2>
+            <div class="times-list" id="times-list">
+                {% for time in times %}
+                <div class="time-item">
+                    <span>{{ time }}</span>
+                    <button class="delete-btn" data-time="{{ time }}">×</button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
