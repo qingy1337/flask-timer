@@ -92,6 +92,37 @@ h2 {
     color: #c0392b;
 }
 
+/* Graph styles */
+.graph-btn {
+    display: block;
+    margin: 15px auto;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.graph-btn:hover {
+    background-color: #2980b9;
+}
+
+.graph-container {
+    margin-top: 20px;
+    max-height: 400px;
+    transition: opacity 0.5s ease;
+}
+
+.graph-container.hidden {
+    opacity: 0;
+}
+.graph-container.visible {
+    opacity: 1;
+}
+
 /* Animation for running timer */
 .running {
     animation: pulse 1s infinite alternate;
