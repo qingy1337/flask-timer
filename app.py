@@ -57,5 +57,17 @@ def delete_time():
 
     return jsonify({"status": "error", "message": "Time not found"})
 
+
+@app.route('/times')
+def get_times():
+    times = []
+    if os.path.exists(TIMES_FILE):
+        with open(TIMES_FILE, "r") as f:
+            for line in f:
+                line = line.strip()
+                if line:
+                    times.append(line)
+    return jsonify(times)
+
 if __name__ == '__main__':
     app.run(debug=True)
