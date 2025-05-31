@@ -2,6 +2,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const timerDisplay = document.getElementById('timer');
     const statusDisplay = document.getElementById('status');
     const timesList = document.getElementById('times-list');
+    const showGraphBtn = document.getElementById('show-graph-btn');
+    const graphContainer = document.getElementById('graph-container');
+    const chartCanvas = document.getElementById('times-chart');
+    let chart = null;
 
     let startTime;
     let elapsedTime = 0;
@@ -120,4 +124,67 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.delete-btn').forEach(btn => {
         btn.addEventListener('click', handleDelete);
     });
+
+    if (showGraphBtn) {
+        showGraphBtn.addEventListener('click', toggleChart);
+    }
+
+    function toggleChart() {
+        if (graphContainer.style.display === 'none' || graphContainer.style.display === '') {
+            loadChart();
+        } else {
+            graphContainer.classList.add('hidden');
+            setTimeout(() => {
+                graphContainer.style.display = 'none';
+            }, 500);
+        }
+    }
+
+    function loadChart() {
+        fetch('/times')
+            .then(res => res.json())
+            .then(times => {
+                const parsed = times.map(t => parseTimeSeconds(t));
+                const labels = parsed.map((_, i) => i + 1);
+                if (!chart) {
+                    chart = new Chart(chartCanvas.getContext('2d'), {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Solve Time (s)',
+                                data: parsed,
+                                borderColor: '#3498db',
+                                backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                                tension: 0.3
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            animation: {
+                                duration: 700,
+                                easing: 'easeOutQuart'
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    chart.data.labels = labels;
+                    chart.data.datasets[0].data = parsed;
+                    chart.update();
+                }
+                graphContainer.style.display = 'block';
+                graphContainer.classList.remove('hidden');
+                graphContainer.classList.add('visible');
+            });
+    }
+
+    function parseTimeSeconds(str) {
+        const [min, sec, ms] = str.split(':');
+        return parseInt(min) * 60 + parseInt(sec) + parseInt(ms) / 1000;
+    }
 });
